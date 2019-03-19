@@ -3,11 +3,11 @@ from django.utils import timezone
 # Create your models here.
 
 
-class User_Type(models.Model):
+class UserType(models.Model):
     name = models.CharField(max_length=20, unique=True)
 # name = models.CharField(max_length=20, unique=True, null=True, blank=True)
     code = models.CharField(max_length=10, unique=True)
-    description = models.CharField(max_length=100)
+    description = models.CharField(max_length=100, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True, blank=True)
     updated_at = models.DateTimeField(auto_now=True)
     deleted_at = models.DateTimeField(null=True, blank=True)
@@ -20,15 +20,15 @@ class User_Type(models.Model):
         return self.name
 
     class Meta:
-        db_table = 'user_type'
+        db_table = 'user_types'
 
 
-class Accounts(models.Model):
+class Account(models.Model):
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     email = models.EmailField(unique=True)
-    user_type = models.ForeignKey(User_Type, on_delete=models.DO_NOTHING)
-    image = models.ImageField()
+    user_type = models.ForeignKey(UserType, on_delete=models.DO_NOTHING)
+    image = models.ImageField(null=True, blank=True)
     username = models.CharField(max_length=50, unique=True)
     password = models.CharField(max_length=250)
     created_at = models.DateTimeField(auto_now_add=True, blank=True)
@@ -46,7 +46,7 @@ class Accounts(models.Model):
         db_table = 'accounts'
 
 
-class Tickets_Form(models.Model):
+class TicketForm(models.Model):
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     designation = models.CharField(max_length=100)
@@ -58,7 +58,7 @@ class Tickets_Form(models.Model):
     serial_no = models.CharField(max_length=50)
 
     class Meta:
-        db_table = 'tickets_form'
+        db_table = 'ticket_forms'
 
     def __str__(self):
         return self.first_name
@@ -67,7 +67,7 @@ class Tickets_Form(models.Model):
 class Classification(models.Model):
     name = models.CharField(max_length=50)
     code = models.CharField(max_length=50)
-    description = models.CharField(max_length=250)
+    description = models.CharField(max_length=250, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True, blank=True)
     updated_at = models.DateTimeField(auto_now=True)
     deleted_at = models.DateTimeField(null=True, blank=True)
@@ -80,7 +80,7 @@ class Classification(models.Model):
         return self.name
 
     class Meta:
-        db_table = 'classification'
+        db_table = 'classifications'
 
 
 class Status(models.Model):
@@ -88,7 +88,7 @@ class Status(models.Model):
     code = models.CharField(max_length=10)
     classification = models.ForeignKey(Classification,
                                        on_delete=models.DO_NOTHING)
-    description = models.CharField(max_length=250)
+    description = models.CharField(max_length=250, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True, blank=True)
     updated_at = models.DateTimeField(auto_now=True)
     deleted_at = models.DateTimeField(null=True, blank=True)
@@ -104,16 +104,16 @@ class Status(models.Model):
         db_table = 'status'
 
 
-class Tickets(models.Model):
+class Ticket(models.Model):
     ref_no = models.CharField(max_length=50,
                               editable=False)
     customer_email = models.EmailField()
     status = models.ForeignKey(Status, on_delete=models.DO_NOTHING)
-    tickets_form = models.ForeignKey(Tickets_Form, on_delete=models.DO_NOTHING)
-    assist_by = models.ForeignKey(Accounts,
+    tickets_form = models.ForeignKey(TicketForm, on_delete=models.DO_NOTHING)
+    assist_by = models.ForeignKey(Account,
                                   on_delete=models.DO_NOTHING)
-    remarks = models.CharField(max_length=50)
-    resolution = models.CharField(max_length=250)
+    remarks = models.CharField(max_length=50, null=True, blank=True)
+    resolution = models.CharField(max_length=250, null=True, blank=True)
     created_by = models.CharField(max_length=50)
     created_at = models.DateTimeField(auto_now_add=True, blank=True)
     updated_by = models.CharField(max_length=50)
